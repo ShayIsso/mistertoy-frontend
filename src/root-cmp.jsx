@@ -21,7 +21,7 @@ export function App() {
                     <Routes>
                         <Route element={<HomePage />} path="/" />
                         <Route element={<AboutUs />} path="/about" />
-                        <Route element={<ToyIndex />} path="/car" />
+                        <Route element={<ToyIndex />} path="/toy" />
                     </Routes>
                 </main>
                 <AppFooter />

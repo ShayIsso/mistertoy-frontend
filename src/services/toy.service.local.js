@@ -1,5 +1,6 @@
 import { storageService } from './async-storage.service.js'
 import { utilService } from './util.service.js'
+import buzImg from '../assets/img/buzzlightyear.png'
 
 const STORAGE_KEY = 'toyDB'
 const labels = ['On wheels', 'Box game', 'Art', 'Baby', 'Doll', 'Puzzle', 'Outdoor', 'Battery Powered']
@@ -60,10 +61,10 @@ function getEmptyToy() {
 function getRandomToy() {
     return {
         _id: utilService.makeId(),
-        name: 'Toy-' + (Date.now() % 1000),
+        name: 'Toy-' + Math.floor(Math.random() * 1000),
         price: utilService.getRandomIntInclusive(10, 200),
         labels: _getRandomLabels(),
-        imgUrl: 'hardcoded-url-for-now',
+        imgUrl: buzImg,
         createdAt: Date.now(),
         inStock: Math.random() > 0.3
     }
