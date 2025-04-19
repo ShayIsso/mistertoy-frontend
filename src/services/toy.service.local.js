@@ -1,17 +1,18 @@
 import { storageService } from './async-storage.service.js'
 import { utilService } from './util.service.js'
 
-const STORAGE_KEY = 'carDB'
+const STORAGE_KEY = 'toyDB'
+const labels = ['On wheels', 'Box game', 'Art', 'Baby', 'Doll', 'Puzzle', 'Outdoor', 'Battery Powered']
 
 _createToys()
 
-export const carService = {
+export const toyService = {
     query,
     getById,
     save,
     remove,
-    getEmptyCar,
-    getRandomCar,
+    getEmptyToy,
+    getRandomToy,
     getDefaultFilter
 }
 
@@ -21,47 +22,50 @@ function query(filterBy = {}) {
             if (!filterBy.txt) filterBy.txt = ''
             if (!filterBy.maxPrice) filterBy.maxPrice = Infinity
             const regExp = new RegExp(filterBy.txt, 'i')
-            return toys.filter(car =>
-            {
-                console.log(car.vendor, regExp.test(car.vendor))
-                console.log(car.price, car.price <= filterBy.maxPrice)
-                return regExp.test(car.vendor) &&
-                car.price <= filterBy.maxPrice
-
-            }
+            return toys.filter(toy =>
+                regExp.test(toy.name) &&
+                toy.price <= filterBy.maxPrice
             )
         })
 }
 
-function getById(carId) {
-    return storageService.get(STORAGE_KEY, carId)
+function getById(toyId) {
+    return storageService.get(STORAGE_KEY, toyId)
 }
 
-function remove(carId) {
-    return storageService.remove(STORAGE_KEY, carId)
+function remove(toyId) {
+    return storageService.remove(STORAGE_KEY, toyId)
 }
 
-function save(car) {
-    if (car._id) {
-        return storageService.put(STORAGE_KEY, car)
+function save(toy) {
+    if (toy._id) {
+        return storageService.put(STORAGE_KEY, toy)
     } else {
-        return storageService.post(STORAGE_KEY, car)
+        toy.createdAt = Date.now()
+        return storageService.post(STORAGE_KEY, toy)
     }
 }
 
-function getEmptyCar() {
+function getEmptyToy() {
     return {
-        vendor: '',
+        name: '',
         price: '',
-        speed: '',
+        labels: [],
+        imgUrl: '',
+        createdAt: Date.now(),
+        inStock: true
     }
 }
 
-function getRandomCar() {
+function getRandomToy() {
     return {
-        vendor: 'Susita-' + (Date.now() % 1000),
-        price: utilService.getRandomIntInclusive(1000, 9000),
-        speed: utilService.getRandomIntInclusive(50, 150),
+        _id: utilService.makeId(),
+        name: 'Toy-' + (Date.now() % 1000),
+        price: utilService.getRandomIntInclusive(10, 200),
+        labels: _getRandomLabels(),
+        imgUrl: 'hardcoded-url-for-now',
+        createdAt: Date.now(),
+        inStock: Math.random() > 0.3
     }
 }
 
@@ -74,10 +78,15 @@ function _createToys() {
     if (toys && toys.length > 0) return
 
     toys = []
-    for(var i = 0; i < 12; i++){
-        const car = getRandomCar()
-        car._id = utilService.makeId()
-        toys.push(car)
+    for (var i = 0; i < 12; i++) {
+        const toy = getRandomToy()
+        toys.push(toy)
     }
     utilService.saveToStorage(STORAGE_KEY, toys)
+}
+
+function _getRandomLabels() {
+    const shuffled = [...labels].sort(() => 0.5 - Math.random())
+    const count = utilService.getRandomIntInclusive(1, 3)
+    return shuffled.slice(0, count)
 }
