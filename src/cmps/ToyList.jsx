@@ -1,6 +1,6 @@
 import { ToyPreview } from "./ToyPreview.jsx"
 
-export function ToyList({ toys, onRemoveToy, onEditToy, addToToys }) {
+export function ToyList({ toys, onRemoveToy, onEditToy }) {
     // console.log('Rendering...')
     return (
         <ul className="toy-list">
@@ -12,10 +12,6 @@ export function ToyList({ toys, onRemoveToy, onEditToy, addToToys }) {
                         <button onClick={() => onRemoveToy(toy._id)}>x</button>
                         <button onClick={() => onEditToy(toy)}>Edit</button>
                     </div>
-
-                    <button className="buy" onClick={() => addToToys(toy)}>
-                        Add to Toys
-                    </button>
                 </li>)}
         </ul>
     )

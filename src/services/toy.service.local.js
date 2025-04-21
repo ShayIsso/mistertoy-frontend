@@ -60,7 +60,6 @@ function getEmptyToy() {
 
 function getRandomToy() {
     return {
-        _id: utilService.makeId(),
         name: 'Toy-' + Math.floor(Math.random() * 1000),
         price: utilService.getRandomIntInclusive(10, 200),
         labels: _getRandomLabels(),

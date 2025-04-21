@@ -1,45 +1,73 @@
 import { useEffect, useState } from "react"
+// import { useSelector } from 'react-redux'
+
 import { ToyList } from "../cmps/ToyList.jsx"
-import { showErrorMsg } from "../services/event-bus.service.js"
-import { toyService } from '../services/toy.service.local.js'
+import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
+import { toyService } from "../services/toy.service.local.js"
+
+
 
 export function ToyIndex() {
+    // const toys = useSelector(state => state.toyModule.toys)
     const [toys, setToys] = useState([])
 
     useEffect(() => {
-        loadToys()
+        toyService.query()
+            .then(toys => {
+                setToys(toys)
+            })
+            .catch(err => {
+                console.log('Faild to load toys', err)
+            })
     }, [])
 
-    function loadToys() {
-        toyService.query()
-            .then(setToys)
-            .catch(err => {
-                console.error('Error loading toys:', err)
-                showErrorMsg('Cannot load toys!')
-            })
-    }
-
     function onRemoveToy(toyId) {
-        console.log('Remove toy', toyId)
+        toyService.remove(toyId)
+            .then(() => {
+                const toysToUpdate = toys.filter(toy => toy._id !== toyId)
+                setToys(toysToUpdate)
+                showSuccessMsg(`toy - ${toyId} removed seccesfuly!`)
+            })
+            .catch((err) => showErrorMsg(`Cannot remove toy`, err))
     }
 
     function onEditToy(toy) {
-        console.log('Edit toy', toy)
+        const price = +prompt('New price?')
+        const toyToSave = { ...toy, price }
+
+        toyService.save(toyToSave)
+            .then((savedToy) => {
+                const toysToUpdate = toys.map(currToy =>
+                    currToy._id === savedToy._id ? savedToy : currToy)
+                setToys(toysToUpdate)
+                showSuccessMsg(`Toy updated to price: $${savedToy.price}`)
+            })
+            .catch((err) => showErrorMsg('Cannot update toy'))
     }
 
-    function addToToy(toyId) {
-        console.log('Add to toy', toyId)
+    function onAddToy() {
+        const toyToSave = toyService.getRandomToy()
+        delete toyToSave._id
+
+        toyService.save(toyToSave)
+            .then((savedToy) => {
+                setToys([...toys, savedToy])
+                showSuccessMsg('Toy added')
+            })
+            .catch((err) => showErrorMsg('Cannot add toy'))
     }
 
     return (
         <div>
-            <h3>Toys App</h3>
+            <header>
+                <h3>Bug List</h3>
+                <button onClick={onAddToy}>Add Bug</button>
+            </header>
             <main>
                 <ToyList
                     toys={toys}
                     onRemoveToy={onRemoveToy}
                     onEditToy={onEditToy}
-                    addToToy={addToToy}
                 />
             </main>
         </div>
