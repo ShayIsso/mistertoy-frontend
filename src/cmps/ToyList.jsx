@@ -1,6 +1,7 @@
+import { Link } from 'react-router-dom'
 import { ToyPreview } from "./ToyPreview.jsx"
 
-export function ToyList({ toys, onRemoveToy, onEditToy }) {
+export function ToyList({ toys, onRemoveToy }) {
     // console.log('Rendering...')
     return (
         <ul className="toy-list">
@@ -9,8 +10,10 @@ export function ToyList({ toys, onRemoveToy, onEditToy }) {
                     <ToyPreview toy={toy} />
 
                     <div>
+                        <button>
+                            <Link to={`/toy/edit/${toy._id}`}>Edit</Link>
+                        </button>
                         <button onClick={() => onRemoveToy(toy._id)}>x</button>
-                        <button onClick={() => onEditToy(toy)}>Edit</button>
                     </div>
                 </li>)}
         </ul>
