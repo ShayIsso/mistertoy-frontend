@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { ToyList } from "../cmps/ToyList.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { toyService } from "../services/toy.service.local.js"
-import { loadToys, removeToy, saveToy } from "../store/actions/toy.actions.js"
+import { loadToys, removeToy, removeToyOptimistic, saveToy } from "../store/actions/toy.actions.js"
 
 
 
@@ -19,7 +19,7 @@ export function ToyIndex() {
     }, [])
 
     function onRemoveToy(toyId) {
-        removeToy(toyId)
+        removeToyOptimistic(toyId)
             .then(() => {
                 showSuccessMsg('Toy removed')
             })
