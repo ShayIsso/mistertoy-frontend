@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { ToyList } from "../cmps/ToyList.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { toyService } from "../services/toy.service.local.js"
-import { loadToys, saveToy } from "../store/actions/toy.actions.js"
+import { loadToys, removeToy, saveToy } from "../store/actions/toy.actions.js"
 
 
 
@@ -19,11 +19,9 @@ export function ToyIndex() {
     }, [])
 
     function onRemoveToy(toyId) {
-        toyService.remove(toyId)
+        removeToy(toyId)
             .then(() => {
-                const toysToUpdate = toys.filter(toy => toy._id !== toyId)
-                setToys(toysToUpdate)
-                showSuccessMsg(`toy - ${toyId} removed seccesfuly!`)
+                showSuccessMsg('Toy removed')
             })
             .catch((err) => showErrorMsg(`Cannot remove toy`, err))
     }

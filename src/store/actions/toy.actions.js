@@ -1,6 +1,6 @@
 import { toyService } from '../../services/toy.service.local.js'
 import { showSuccessMsg } from '../../services/event-bus.service.js'
-import { ADD_TOY, SET_TOYS, UPDATE_TOY } from '../reducers/toy.reducer.js'
+import { ADD_TOY, REMOVE_TOY, SET_TOYS, UPDATE_TOY } from '../reducers/toy.reducer.js'
 import { store } from '../store.js'
 
 export function loadToys() {
@@ -10,6 +10,17 @@ export function loadToys() {
 		})
 		.catch(err => {
 			console.log('car action -> Cannot load toys', err)
+			throw err
+		})
+}
+
+export function removeToy(toyId) {
+	return toyService
+		.remove(toyId).then(() => {
+			store.dispatch({ type: REMOVE_TOY, toyId })
+		})
+		.catch(err => {
+			console.log('car action -> Cannot remove toy', err)
 			throw err
 		})
 }
