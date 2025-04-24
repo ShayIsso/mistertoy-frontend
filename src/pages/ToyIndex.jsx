@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { ToyList } from "../cmps/ToyList.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { toyService } from "../services/toy.service.local.js"
-import { loadToys } from "../store/actions/toy.actions.js"
+import { loadToys, saveToy } from "../store/actions/toy.actions.js"
 
 
 
@@ -32,11 +32,8 @@ export function ToyIndex() {
         const price = +prompt('New price?')
         const toyToSave = { ...toy, price }
 
-        toyService.save(toyToSave)
+        saveToy(toyToSave)
             .then((savedToy) => {
-                const toysToUpdate = toys.map(currToy =>
-                    currToy._id === savedToy._id ? savedToy : currToy)
-                setToys(toysToUpdate)
                 showSuccessMsg(`Toy updated to price: $${savedToy.price}`)
             })
             .catch((err) => showErrorMsg('Cannot update toy'))
@@ -44,14 +41,13 @@ export function ToyIndex() {
 
     function onAddToy() {
         const toyToSave = toyService.getRandomToy()
-        delete toyToSave._id
-
-        toyService.save(toyToSave)
+        saveToy(toyToSave)
             .then((savedToy) => {
-                setToys([...toys, savedToy])
-                showSuccessMsg('Toy added')
+                showSuccessMsg(`Toy added (id: ${savedToy._id})`)
             })
-            .catch((err) => showErrorMsg('Cannot add toy'))
+            .catch((err) => {
+                showErrorMsg('Cannot add toy')
+            })
     }
 
     return (

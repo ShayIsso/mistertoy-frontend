@@ -23,12 +23,12 @@ export function toyReducer(state = initialState, action = {}) {
         case ADD_TOY:
             return {
                 ...state,
-                toys: [...state.toys, action.car]
+                toys: [...state.toys, action.toy]
             }
         case UPDATE_TOY:
             return {
                 ...state,
-                toys: state.toys.map(car => car._id === action.car._id ? action.car : car)
+                toys: state.toys.map(toy => toy._id === action.toy._id ? action.toy : toy)
             }
 
         default:

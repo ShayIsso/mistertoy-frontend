@@ -80,6 +80,7 @@ function _createToys() {
     toys = []
     for (var i = 0; i < 12; i++) {
         const toy = getRandomToy()
+        toy._id = utilService.makeId()
         toys.push(toy)
     }
     utilService.saveToStorage(STORAGE_KEY, toys)
