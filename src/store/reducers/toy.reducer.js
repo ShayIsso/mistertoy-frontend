@@ -1,0 +1,37 @@
+//* Cars
+export const SET_TOYS = 'SET_TOYS'
+export const REMOVE_TOY = 'REMOVE_TOY'
+export const ADD_TOY = 'ADD_TOY'
+export const UPDATE_TOY = 'UPDATE_TOY'
+
+const initialState = {
+    toys: [],
+}
+
+export function toyReducer(state = initialState, action = {}) {
+    switch (action.type) {
+        //* toys
+        case SET_TOYS:
+            return { ...state, toys: action.toys }
+        case REMOVE_TOY:
+            const lastToys = [...state.toys]
+            return {
+                ...state,
+                toys: state.toys.filter(car => car._id !== action.carId),
+                lastToys
+            }
+        case ADD_TOY:
+            return {
+                ...state,
+                toys: [...state.toys, action.car]
+            }
+        case UPDATE_TOY:
+            return {
+                ...state,
+                toys: state.toys.map(car => car._id === action.car._id ? action.car : car)
+            }
+
+        default:
+            return state
+    }
+}

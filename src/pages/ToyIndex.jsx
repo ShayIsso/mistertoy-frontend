@@ -1,21 +1,18 @@
-import { useEffect, useState } from "react"
-// import { useSelector } from 'react-redux'
+import { useEffect } from "react"
+import { useSelector } from 'react-redux'
 
 import { ToyList } from "../cmps/ToyList.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { toyService } from "../services/toy.service.local.js"
+import { loadToys } from "../store/actions/toy.actions.js"
 
 
 
 export function ToyIndex() {
-    // const toys = useSelector(state => state.toyModule.toys)
-    const [toys, setToys] = useState([])
+    const toys = useSelector(state => state.toyModule.toys)
 
     useEffect(() => {
-        toyService.query()
-            .then(toys => {
-                setToys(toys)
-            })
+        loadToys()
             .catch(err => {
                 console.log('Faild to load toys', err)
             })

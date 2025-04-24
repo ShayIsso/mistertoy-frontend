@@ -1,7 +1,7 @@
 import { BrowserRouter as Router } from 'react-router'
 // const Router = ReactRouterDOM.HashRouter
 import { Route, Routes } from 'react-router-dom'
-// import { Provider } from 'react-redux'
+import { Provider } from 'react-redux'
 
 
 import { AppHeader } from './cmps/AppHeader.jsx'
@@ -16,7 +16,7 @@ import { store } from './store/store.js'
 export function App() {
 
     return (
-        // <Provider store={store}>
+        <Provider store={store}>
             <Router>
                 <section className="app">
                     <AppHeader />
@@ -30,6 +30,6 @@ export function App() {
                     <AppFooter />
                 </section>
             </Router>
-        // </Provider>
+        </Provider>
     )
 }
