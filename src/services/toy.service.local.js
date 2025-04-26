@@ -18,16 +18,22 @@ export const toyService = {
 }
 
 function query(filterBy = {}) {
-    return storageService.query(STORAGE_KEY)
-        .then(toys => {
-            if (!filterBy.txt) filterBy.txt = ''
-            if (!filterBy.maxPrice) filterBy.maxPrice = Infinity
+    return storageService.query(STORAGE_KEY).then(toys => {
+        let toysToShow = toys
+        if (filterBy.txt) {
             const regExp = new RegExp(filterBy.txt, 'i')
-            return toys.filter(toy =>
-                regExp.test(toy.name) &&
-                toy.price <= filterBy.maxPrice
-            )
-        })
+            toysToShow = toys.filter(toy => regExp.test(toy.name))
+        }
+        return toysToShow
+    })
+    //     if (!filterBy.txt) filterBy.txt = ''
+    //     if (!filterBy.maxPrice) filterBy.maxPrice = Infinity
+    //     const regExp = new RegExp(filterBy.txt, 'i')
+    //     return toys.filter(toy =>
+    //         regExp.test(toy.name) &&
+    //         toy.price <= filterBy.maxPrice
+    //     )
+    // })
 }
 
 function getById(toyId) {
@@ -70,7 +76,7 @@ function getRandomToy() {
 }
 
 function getDefaultFilter() {
-    return { txt: '', maxPrice: '' }
+    return { txt: '' }
 }
 
 function _createToys() {

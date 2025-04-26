@@ -1,10 +1,12 @@
 import { toyService } from '../../services/toy.service.local.js'
 import { showSuccessMsg } from '../../services/event-bus.service.js'
-import { ADD_TOY, REMOVE_TOY, SET_TOYS, TOY_UNDO, UPDATE_TOY } from '../reducers/toy.reducer.js'
+import { ADD_TOY, REMOVE_TOY, SET_FILTER_BY, SET_TOYS, TOY_UNDO, UPDATE_TOY } from '../reducers/toy.reducer.js'
 import { store } from '../store.js'
 
 export function loadToys() {
-	return toyService.query()
+	const { filterBy } = store.getState().toyModule
+
+	return toyService.query(filterBy)
 		.then((toys) => {
 			store.dispatch({ type: SET_TOYS, toys })
 		})
@@ -51,4 +53,8 @@ export function saveToy(toy) {
 			console.log('car action -> Cannot save toy', err)
 			throw err
 		})
+}
+
+export function setFilter(filterBy = toyService.getDefaultFilter()) {
+	store.dispatch({ type: SET_FILTER_BY, filterBy: filterBy })
 }
