@@ -1,19 +1,24 @@
-import { toyService } from '../../services/toy.service.local.js'
+import { toyService } from '../../services/toy.service.js'
 import { showSuccessMsg } from '../../services/event-bus.service.js'
-import { ADD_TOY, REMOVE_TOY, SET_FILTER_BY, SET_TOYS, TOY_UNDO, UPDATE_TOY } from '../reducers/toy.reducer.js'
+import { ADD_TOY, REMOVE_TOY, SET_FILTER_BY, SET_IS_LOADING, SET_TOYS, TOY_UNDO, UPDATE_TOY } from '../reducers/toy.reducer.js'
 import { store } from '../store.js'
 
-export function loadToys() {
+export async function loadToys() {
 	const { filterBy } = store.getState().toyModule
 
-	return toyService.query(filterBy)
-		.then((toys) => {
-			store.dispatch({ type: SET_TOYS, toys })
-		})
-		.catch(err => {
-			console.log('car action -> Cannot load toys', err)
-			throw err
-		})
+	store.dispatch({ type: SET_IS_LOADING, isLoading: true })
+	try {
+		const toys = await toyService.query(filterBy)
+		store.dispatch({ type: SET_TOYS, toys })
+	} catch (err) {
+		console.log('car action -> Cannot load toys', err)
+		throw err
+	}
+	finally {
+		setTimeout(() => {
+			store.dispatch({ type: SET_IS_LOADING, isLoading: false })
+		}, 250)
+	}
 }
 
 export function removeToy(toyId) {

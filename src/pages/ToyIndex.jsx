@@ -6,12 +6,14 @@ import { ToyList } from "../cmps/ToyList.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { loadToys, removeToyOptimistic, setFilter } from "../store/actions/toy.actions.js"
 import { ToyFilter } from "../cmps/ToyFilter.jsx"
+import { Loader } from "../cmps/Loader.jsx"
 
 
 
 export function ToyIndex() {
     const toys = useSelector(state => state.toyModule.toys)
     const filterBy = useSelector(state => state.toyModule.filterBy)
+    const isLoading = useSelector(storeState => storeState.toyModule.flag.isLoading)
 
     useEffect(() => {
         loadToys()
@@ -43,10 +45,8 @@ export function ToyIndex() {
                 </button>
             </header>
             <main>
-                <ToyList
-                    toys={toys}
-                    onRemoveToy={onRemoveToy}
-                />
+            {isLoading && <Loader />}
+			{!isLoading && <ToyList toys={toys} onRemoveToy={onRemoveToy} />}
             </main>
         </div>
     )
